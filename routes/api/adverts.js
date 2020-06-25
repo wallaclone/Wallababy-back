@@ -2,6 +2,7 @@
 
 const router = require('express').Router();
 const Advert = require('../../models/Advertisement');
+const User = require('../../models/User');
 const upload = require('../../lib/multerConfig');
 
 router.get('/', async function(req, res, next) {
@@ -15,7 +16,10 @@ router.get('/', async function(req, res, next) {
 router.post('/', upload.single('image'), async function(req, res, next) {
   try {
     const advert = new Advert(req.body);
+    const userId = req.userId;
+    const user = await User.findById(userId);
 
+    advert.owner = user.username;
     advert.date_creation = Date.now();
     await advert.setFoto(req.file);
 

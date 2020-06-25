@@ -3,6 +3,7 @@
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const jwtAuth = require('./lib/jwtAuth');
@@ -11,6 +12,12 @@ require('dotenv').config();
 require('./lib/connectMongoose');
 
 const app = express();
+
+/* Allow all cors request */
+app.use(cors());
+
+/* Fix email issue with TLS Request */
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

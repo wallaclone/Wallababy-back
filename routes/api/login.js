@@ -10,9 +10,8 @@ router.post('/', async function(req, res, next) {
   try {
     const username = req.body.username;
     const password = req.body.password;
-
     const user = await User.findOne({ username });
-    console.log("llega user", user);
+    
     if (!user || !bcrypt.compareSync(password, user.password)){
         const error = new Error('Invalid credentials');
         next(error);

@@ -34,18 +34,14 @@ userSchema.statics.recoverPassword = async function(email) {
         from: process.env.WALLACLONE_EMAIL,
         to: email,
         subject: `Forgot Password`,
-        html: `<h1>Hello ${user.username}</h1>
-        <p>Someone requested that the password for your Wallaclone account be reset.
-            Go to the below url to reset the password
-        </p>    
-        <p><a href='http://localhost:3000'></a></p>
-        <p>
-            If you didnt request this, you can ignore this email or let us know. Your password
-             will not change until you create a new password
-        </p>`
+        html: `
+        <p>Someone requested that the password for your Wallaclone account be reset.</p>
+        <p>Click <a href="http://localhost:3000/recoverpassword/?` + user.username + `">here</a> to reset your password</p>
+        <p>If you didnt request this, you can ignore this email or let us know. Your password
+        will not change until you create a new password</p>`
+        
         
     });
-
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     console.log("message sent: ", info);
 }
