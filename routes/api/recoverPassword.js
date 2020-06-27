@@ -20,11 +20,18 @@ router.post('/', async function(req, res, next) {
  Endpoint to change user password before recoverpassword request,
  Enpoint is: http://localhost:3000/recoverpassword/forgotpassword
 */
-router.post('/forgotpassword', async function(req, res, next) {
+router.post('/forgotpassword:id', async function(req, res, next) {
   try {
-    const url = req.protocol + '://' + req.get('host') + req.originalUrl;
-    console.log("la url es: ",url);
-    next();
+    const newPassword = req.body.newPassword;
+    const userId = req.query.id;
+
+    const user = User.findById(userId);
+    if (!user) {
+      res.status(401).json('User not found');
+      return;
+    }
+    user.update({ password: newPassword});
+    res.status(201).send('Password updated correctly');
   } catch (error) {
     next(error);
   }

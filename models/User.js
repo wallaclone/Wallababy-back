@@ -33,13 +33,18 @@ userSchema.statics.recoverPassword = async function(email) {
     let info = await transporter.sendMail({
         from: process.env.WALLACLONE_EMAIL,
         to: email,
+        tls: {
+            rejectUnauthorized: false
+        },
         subject: `Forgot Password`,
         html: `
-        <p>Someone requested that the password for your Wallaclone account be reset.</p>
-        <p>Click <a href="http://localhost:3000/recoverpassword/?` + user.username + `">here</a> to reset your password</p>
-        <p>If you didnt request this, you can ignore this email or let us know. Your password
-        will not change until you create a new password</p>`
-        
+        <h1>Hello `+ user.username + `</h1>
+        <body>
+            <p>Someone requested that the password for your Wallaclone account be reset.</p>
+            <p>Click <a href="http://localhost:3000/changePassword/?` + user._id + `">here</a> to reset your password</p>
+            <p>If you didnt request this, you can ignore this email or let us know. Your password
+            will not change until you create a new password</p>
+        </body>`
         
     });
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));

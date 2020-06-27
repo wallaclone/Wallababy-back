@@ -16,8 +16,8 @@ const app = express();
 /* Allow all cors request */
 app.use(cors());
 
-/* Fix email issue with TLS Request */
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+/* Fix email issue with TLS Request, FIXED IN EMAIL REQUEST */
+//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

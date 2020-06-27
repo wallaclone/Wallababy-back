@@ -19,16 +19,14 @@ router.post('/', async function(req, res, next) {
     user = await User.findOne({ username });
 
     if (user) {
-      const error = new Error('Username already in use');
-      next(error);
+      res.status(400).json('The username is in use');
       return;
     }
 
     const email = req.body.email;
     user = await User.findOne({ email });
     if (user) {
-      const error = new Error('Email already in use');
-      next(error);
+      res.status(400).json('The email is in use');
       return;
     }
 

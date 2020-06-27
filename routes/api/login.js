@@ -13,8 +13,8 @@ router.post('/', async function(req, res, next) {
     const user = await User.findOne({ username });
     
     if (!user || !bcrypt.compareSync(password, user.password)){
-        const error = new Error('Invalid credentials');
-        next(error);
+      res.status(400).json('Invalid credentials');
+      return;
     }
     const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET, {
         expiresIn: '2d'
