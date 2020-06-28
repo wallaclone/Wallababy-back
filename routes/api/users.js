@@ -3,16 +3,40 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
+const { body, validationResult } = require('express-validator');
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+/* GET a specific user by Id*/
+router.get('/:id', async function(req, res, next) {
+  try {
+    const _id = req.params.id;
+
+    const user = await User.findById({_id});
+    if (!user){
+      const error = new Error('not found');
+      error.status = 404;
+      return next(error);
+    }
+    res.json({ result: user })
+  } catch (error) { next(error) }
+})
 
 /* User Creation */
-router.post('/', async function(req, res, next) {
+router.post('/', [
+  body('username').isLength({ min: 5 }).withMessage('The username must have more than 5 characters'),
+  body('email').isEmail(),
+  body('password').isString().withMessage('Cant be empty')
+], async function(req, res, next) {
   try {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     let user = "";
     
     const username = req.body.username;

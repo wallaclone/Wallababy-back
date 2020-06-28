@@ -3,14 +3,21 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
+const { body, validationResult } = require('express-validator');
 
 /* Send email to the specified email*/
-router.post('/', async function(req, res, next) {
+router.post('/', [
+  body('email').isEmail()
+], async function(req, res, next) {
   try {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     const email = req.body.email;
 
     await User.recoverPassword(email);
-    res.status(201).send('email enviado correctamente');
+    res.status(201).json('email enviado correctamente');
   } catch (error) {
     next(error);
   }
@@ -18,20 +25,23 @@ router.post('/', async function(req, res, next) {
 
 /*
  Endpoint to change user password before recoverpassword request,
- Enpoint is: http://localhost:3000/recoverpassword/forgotpassword
+ Endpoint is: http://localhost:3000/recoverpassword/forgotpassword/:userId
 */
-router.post('/forgotpassword:id', async function(req, res, next) {
+router.post('/forgotpassword/:id', async function(req, res, next) {
   try {
-    const newPassword = req.body.newPassword;
-    const userId = req.query.id;
+    const newPassword = req.body.password;
+    if (!newPassword) {
+      return res.status(400).json('Password cant be empty');
+    }
+    const userId = req.params.id;
 
     const user = User.findById(userId);
     if (!user) {
       res.status(401).json('User not found');
       return;
     }
-    user.update({ password: newPassword});
-    res.status(201).send('Password updated correctly');
+    await user.update({ password: User.hashPassword(newPassword)});
+    res.status(201).json('Password updated correctly');
   } catch (error) {
     next(error);
   }

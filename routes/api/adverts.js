@@ -4,6 +4,7 @@ const router = require('express').Router();
 const Advert = require('../../models/Advertisement');
 const User = require('../../models/User');
 const upload = require('../../lib/multerConfig');
+const { body, validationResult } = require('express-validator');
 
 router.get('/', async function(req, res, next) {
   const limit = parseInt(req.query.limit) || 1000;
@@ -13,15 +14,28 @@ router.get('/', async function(req, res, next) {
   res.status(201).json(adverts);
 });
 
-router.post('/', upload.single('image'), async function(req, res, next) {
+router.post('/', upload.single('image'), [
+  body('name').isString().withMessage('Name cant be empty'),
+  body('price').isNumeric().withMessage('Price can only contain numbers'),
+  body('status').isBoolean().withMessage('Status cant be empty'),
+], async function(req, res, next) {
   try {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
     const advert = new Advert(req.body);
     const userId = req.userId;
     const user = await User.findById(userId);
-
+    
+    if (!user) {
+      res.status(403).json('You have to be logged to create an advert');
+      return;
+    }
     advert.owner = user.username;
     advert.date_creation = Date.now();
     await advert.setFoto(req.file);
+    
 
     const saved = await advert.save();
     res.status(201).json(saved);
@@ -39,9 +53,7 @@ router.get('/:id', async (req, res, next) => {
       return next(error);
     }
     res.json({ result: advert })
-  } catch (error) {
-    next(error);
-  }
+  } catch (error) { next(error) }
 })
 
 router.put('/:id', upload.single('image'), async function(req, res, next) {

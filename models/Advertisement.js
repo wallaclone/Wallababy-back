@@ -1,8 +1,6 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const path = require('path');
-const fs = require('fs-extra');
 
 const advertSchema = mongoose.Schema({
     name: String,
@@ -25,11 +23,24 @@ advertSchema.statics.list = async function(limit, sortField) {
     return result;
 }
 
+const currentDateFormatted = () => {
+    const dateObj = new Date();
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    const hours = dateObj.getHours();
+    const minutes = dateObj.getMinutes();
+
+    const newdate = year + '-' + month + '-' + day + '-' + hours + ':' + minutes + '_';
+    return newdate;
+}
+
 advertSchema.methods.setFoto = async function (file) {
     if (!file) return
-    const dstPath = path.join(__dirname, '../public/images', file.originalname);
+    const currentDate = currentDateFormatted();
+    //const dstPath = path.join(__dirname, '../public/images', file.originalname);
     //await fs.copy(file.path, dstPath);
-    this.image = file.originalname;
+    this.image = currentDate + file.originalname;
 }
 
 const Advertisement = mongoose.model('Advertisement', advertSchema);

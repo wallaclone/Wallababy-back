@@ -34,7 +34,7 @@ app.use('/api/users', require('./routes/api/users'));
 app.use('/api/login', require('./routes/api/login'));
 app.use('/api/recoverpassword', require('./routes/api/recoverPassword'));
 app.use('/api/adverts', jwtAuth(), require('./routes/api/adverts'));
-
+app.use('/api/tags', jwtAuth(), require('./routes/api/tags'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -15,9 +15,13 @@ To run the application in developer mode
 ## API
 
 ### User Creation
-Endpoint to call to create users in the app.
+This endpoint is a CRUD of users, allows to create, remove, get one and all users and also edit.
 
 `http://localhost:3000/api/users`
+
+To edit, remove or get one user specify the user id:
+
+`http://localhost:3000/api/users/9820jidwa92`
 
 Required Fields:
 
@@ -44,6 +48,13 @@ Required Fields:
 
 1. email
 
+Endpoint to call to update user password, before recover
+
+`http://localhost:3000/api/recoverpassword/forgotpassword/:userId`
+
+1. password 
+
+
 ### Advertisements
 This endpoint is a CRUD of adverts, allows to create, remove, get one and all adverts and also edit.
 
@@ -61,4 +72,9 @@ Required Fields:
 4. status
 5. price
 6. tags
+
+### Tags
+Return all the tags allowed for the products
+
+`http://localhost:3000/api/tags`
 
