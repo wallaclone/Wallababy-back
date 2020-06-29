@@ -78,9 +78,8 @@ router.post('/', upload.single('image'), [
     advert.date_creation = Date.now();
     await advert.setFoto(req.file);
     
-
     const saved = await advert.save();
-    res.status(201).json(saved);
+    res.status(201).json( {'new ad details': saved, 'id': saved._id});
   } catch (error) { next(error) }
 });
 
