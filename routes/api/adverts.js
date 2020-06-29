@@ -9,8 +9,50 @@ const { body, validationResult } = require('express-validator');
 router.get('/', async function(req, res, next) {
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort || 'date_creation';
+  const name = req.query.name;
+  const tags = req.query.tags;
+  const toSell = req.query.venta;
+  const price = req.query.price;
+  const owner = req.query.owner;
+  const filters = {};
 
-  const adverts = await Advert.list(limit, sort);
+  if (typeof name !== 'undefined') {
+    filters.name = new RegExp(nombre, 'i');
+  }
+
+  if (typeof tags !== 'undefined') {
+    filters.tags = tags;
+  }
+
+  if (typeof toSell !== 'undefined') {
+    filters.toSell = toSell;
+  }
+
+  if (typeof price !== 'undefined' && price !== '-') {
+    if (price.indexOf('-') !== -1) {
+      filters.price = {}
+      let rango = price.split('-')
+      if (rango[0] !== '') {
+        filters.price.$gte = rango[0]
+      }
+
+      if (rango[1] !== '') {
+        filters.price.$lte = rango[1]
+      }
+    } else {
+      filters.price = price
+    }
+  }
+  
+  if (typeof name !== 'undefined') {
+    filters.name = name;
+  }
+
+  if(typeof owner !== 'undefined') {
+    filters.owner = owner
+  }
+
+  const adverts = await Advert.list(filters, limit, sort);
   res.status(201).json(adverts);
 });
 

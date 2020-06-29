@@ -13,8 +13,8 @@ const advertSchema = mongoose.Schema({
     date_creation: Date,
 });
 
-advertSchema.statics.list = async function(limit, sortField) {
-    const query = Advertisement.find();
+advertSchema.statics.list = async function(filters, limit, sortField) {
+    const query = Advertisement.find(filters);
     query.sort(sortField);
     query.limit(limit);
 
