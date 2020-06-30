@@ -4,10 +4,13 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const nodemailer = require('nodemailer');
 
+const { ObjectId } = mongoose.Schema.Types;
+
 const userSchema = mongoose.Schema({
-    username: { type: String, unique: true, index: true },
-    email: {type: String, unique: true, index: true },
-    password: String
+    username: { type: String, unique: true, index: true, required: true },
+    email: {type: String, unique: true, index: true, required: true },
+    password: {type: String, required: true},
+    favorites: [{type: ObjectId, ref: 'Fav ads'}]
 })
 
 userSchema.statics.hashPassword = function(plainPassword) {
@@ -41,7 +44,7 @@ userSchema.statics.recoverPassword = async function(email) {
         <h1>Hello `+ user.username + `</h1>
         <body>
             <p>Someone requested that the password for your Wallaclone account be reset.</p>
-            <p>Click <a href="http://localhost:3000/changePassword/?` + user._id + `">here</a> to reset your password</p>
+            <p>Click <a href="http://localhost:3000/changePassword/?=` + user._id + `">here</a> to reset your password</p>
             <p>If you didnt request this, you can ignore this email or let us know. Your password
             will not change until you create a new password</p>
         </body>`
