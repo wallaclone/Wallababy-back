@@ -6,7 +6,7 @@ const User = require('../../models/User');
 const upload = require('../../lib/multerConfig');
 const { body, validationResult } = require('express-validator');
 
-router.get('/', async function(req, res, next) {
+router.get('/', async function (req, res, next) {
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort || 'date_creation';
   const name = req.query.name;
@@ -43,12 +43,12 @@ router.get('/', async function(req, res, next) {
       filters.price = price
     }
   }
-  
+
   if (typeof name !== 'undefined') {
     filters.name = name;
   }
 
-  if(typeof owner !== 'undefined') {
+  if (typeof owner !== 'undefined') {
     filters.owner = owner
   }
 
@@ -60,16 +60,16 @@ router.post('/', upload.single('image'), [
   body('name').isString().withMessage('Name cant be empty'),
   body('price').isNumeric().withMessage('Price can only contain numbers'),
   body('status').isBoolean().withMessage('Status cant be empty'),
-], async function(req, res, next) {
+], async function (req, res, next) {
   try {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
     const advert = new Advert(req.body);
     const userId = req.userId;
     const user = await User.findById(userId);
-    
+
     if (!user) {
       res.status(403).json('You have to be logged to create an advert');
       return;
@@ -77,9 +77,9 @@ router.post('/', upload.single('image'), [
     advert.owner = user.username;
     advert.date_creation = Date.now();
     await advert.setFoto(req.file);
-    
+
     const saved = await advert.save();
-    res.status(201).json( {'new ad details': saved, 'id': saved._id});
+    res.status(201).json({ 'new ad details': saved, 'id': saved._id });
   } catch (error) { next(error) }
 });
 
@@ -87,8 +87,8 @@ router.get('/:id', async (req, res, next) => {
   try {
     const _id = req.params.id;
 
-    const advert = await Advert.findOne({_id});
-    if (!advert){
+    const advert = await Advert.findOne({ _id });
+    if (!advert) {
       const error = new Error('not found');
       error.status = 404;
       return next(error);
@@ -97,7 +97,7 @@ router.get('/:id', async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.put('/:id', upload.single('image'), async function(req, res, next) {
+router.put('/:id', upload.single('image'), async function (req, res, next) {
   try {
     const _id = req.params.id;
     const advert = req.body;
@@ -110,46 +110,16 @@ router.put('/:id', upload.single('image'), async function(req, res, next) {
       result: savedAdvert,
       message: 'Advert updated correctly'
     });
-  } catch (error) { next(error) }  
+  } catch (error) { next(error) }
 });
 
-router.delete('/:id', async(req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const _id = req.params.id;
 
     await Advert.deleteOne({ _id });
     res.json({ message: 'The advert has been removed correctly' });
   } catch (error) { next(error) }
-})
-
-/* Add ad to user's favorites list */ 
-
-router.post('/favorites', async (req, res, next) => {
-  const { advert_id } = req.body;
-  try {
-    const userId = req.userId;
-    const user = await User.findById(userId);
-    
-    const isFavved = user.favorites.includes(advert_id);
-    if (!isFavved) {
-      const userUpdated = await User.findByIdAndUpdate(
-        user._id,
-        { $push: { favorites: advert_id} },
-        { new: true }
-      );
-      return res.json({ message: 'Ad added to fav list', userUpdated });
-    }
-
-    return res.status(400).json({ message: 'This ad is already in favorites list' });
-  } catch (error) {
-    console.log('Error adding a favorite ad to favorites list', error);
-    return res
-      .status(500)
-      .json({ message: 'Error adding favorite ad to favorites list' });
-  }
-});
-
-/* Show user's favorites list */
-
+}) 
 
 module.exports = router;

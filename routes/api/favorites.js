@@ -1,0 +1,35 @@
+const router = require('express').Router();
+const Advert = require('../../models/Advertisement');
+const User = require('../../models/User');
+
+/* Add ad to user's favorites list */
+
+router.post('/', async (req, res, next) => {
+  const { advert_id } = req.body;
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+
+    const isFavved = user.favorites.includes(advert_id);
+    if (!isFavved) {
+      const userUpdated = await User.findByIdAndUpdate(
+        user._id,
+        { $push: { favorites: advert_id } },
+        { new: true }
+      );
+      return res.json({ message: 'Ad added to fav list', userUpdated });
+    }
+
+    return res.status(400).json({ message: 'This ad is already in favorites list' });
+  } catch (error) {
+    console.log('Error adding a favorite ad to favorites list', error);
+    return res.status(500).json({ message: 'Error adding favorite ad to favorites list' });
+  }
+});
+
+/* Remove ad from favorites list */
+
+
+
+
+module.exports = router;
