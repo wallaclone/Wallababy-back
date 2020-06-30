@@ -3,8 +3,12 @@
 const router = require('express').Router();
 const Advert = require('../../models/Advertisement');
 const User = require('../../models/User');
+const jwtAuth = require('../../lib/jwtAuth');
+
 const upload = require('../../lib/multerConfig');
 const { body, validationResult } = require('express-validator');
+
+/* Show ad list and filters. Public & private*/
 
 router.get('/', async function (req, res, next) {
   const limit = parseInt(req.query.limit) || 1000;
@@ -56,7 +60,8 @@ router.get('/', async function (req, res, next) {
   res.status(201).json(adverts);
 });
 
-router.post('/', upload.single('image'), [
+/* Create new ad. Private */
+router.post('/', jwtAuth(), upload.single('image'), [
   body('name').isString().withMessage('Name cant be empty'),
   body('price').isNumeric().withMessage('Price can only contain numbers'),
   body('status').isBoolean().withMessage('Status cant be empty'),
@@ -83,6 +88,7 @@ router.post('/', upload.single('image'), [
   } catch (error) { next(error) }
 });
 
+/* See ad detail. Public & private */
 router.get('/:id', async (req, res, next) => {
   try {
     const _id = req.params.id;
@@ -97,7 +103,9 @@ router.get('/:id', async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.put('/:id', upload.single('image'), async function (req, res, next) {
+/* Edit ad. Private */
+
+router.put('/:id', jwtAuth(), upload.single('image'), async function (req, res, next) {
   try {
     const _id = req.params.id;
     const advert = req.body;
@@ -113,7 +121,9 @@ router.put('/:id', upload.single('image'), async function (req, res, next) {
   } catch (error) { next(error) }
 });
 
-router.delete('/:id', async (req, res, next) => {
+/* Delete ad. Private */
+
+router.delete('/:id', jwtAuth(), async (req, res, next) => {
   try {
     const _id = req.params.id;
 
