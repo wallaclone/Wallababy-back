@@ -29,9 +29,8 @@ router.post('/', async (req, res, next) => {
 
 /* Remove ad from favorites list */
 
-router.delete('/', async (req, res, next) => {
-  const { advert_id } = req.body;
-  console.log({advert_id})
+router.delete('/:id', async (req, res, next) => {
+  const advert_id = req.params.id;
 
   try {
     const userId = req.userId;
@@ -55,6 +54,17 @@ router.delete('/', async (req, res, next) => {
 
 
 /* Show user's favorites list */
+router.get('/', async function(req, res, next) {
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId).populate('Fav Ads');
+    
+    res.status(201).json(user);
 
+  } catch (error) {
+    console.log('Error showing fav list', error);
+    return res.status(500).json({ message: 'Error showing fav list' });
+   }
+});
 
 module.exports = router;
