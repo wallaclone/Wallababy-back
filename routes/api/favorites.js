@@ -59,7 +59,7 @@ router.get('/', async function(req, res, next) {
     const userId = req.userId;
     const user = await User.findById(userId).populate('Fav Ads');
     
-    res.status(201).json(user);
+    res.status(201).json(user.favorites);
 
   } catch (error) {
     console.log('Error showing fav list', error);
