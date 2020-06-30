@@ -29,7 +29,32 @@ router.post('/', async (req, res, next) => {
 
 /* Remove ad from favorites list */
 
+router.delete('/', async (req, res, next) => {
+  const { advert_id } = req.body;
+  console.log({advert_id})
 
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    const isFavved = user.favorites.includes(advert_id);
+    console.log(isFavved)
+    if (isFavved) {
+        await User.findByIdAndUpdate(user._id,
+        { $pull: { favorites: advert_id } },
+        { deleted: true}
+      );
+      return res.json({ message: 'Ad removed from favorite list' });
+    }
+
+    return res.status(400).json({ message: 'This ad was not in your favorite list' });
+  } catch (error) {
+    console.log('Error removing ad from favorite list', error);
+    return res.status(500).json({ message: 'Error removing favorite ad from favorites list' });
+  }
+});
+
+
+/* Show user's favorites list */
 
 
 module.exports = router;
