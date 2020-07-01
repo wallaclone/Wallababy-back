@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const nodemailer = require('nodemailer');
 const Handlebars = require('handlebars');
+const jwt = require('jsonwebtoken');
 
 const fs = require('fs');
 const emailTemplate = Handlebars.compile(fs.readFileSync('./views/email.handlebars').toString()
@@ -38,7 +39,9 @@ userSchema.statics.recoverPassword = async function (email) {
         }
     })
 
-
+    const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+    });
 
     let info = await transporter.sendMail({
         from: process.env.WALLACLONE_EMAIL,
@@ -49,7 +52,8 @@ userSchema.statics.recoverPassword = async function (email) {
         subject: `Forgot Password`,
         html: emailTemplate({
             username: user.username,
-            id: user._id
+            id: user._id,
+            token: token
         }),
     });
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
