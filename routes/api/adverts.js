@@ -3,10 +3,14 @@
 const router = require('express').Router();
 const Advert = require('../../models/Advertisement');
 const User = require('../../models/User');
+const jwtAuth = require('../../lib/jwtAuth');
+
 const upload = require('../../lib/multerConfig');
 const { body, validationResult } = require('express-validator');
 
-router.get('/', async function(req, res, next) {
+/* Show ad list and filters. Public & private*/
+
+router.get('/', async function (req, res, next) {
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort || 'date_creation';
   const name = req.query.name;
@@ -43,12 +47,12 @@ router.get('/', async function(req, res, next) {
       filters.price = price
     }
   }
-  
+
   if (typeof name !== 'undefined') {
     filters.name = name;
   }
 
-  if(typeof owner !== 'undefined') {
+  if (typeof owner !== 'undefined') {
     filters.owner = owner
   }
 
@@ -56,20 +60,21 @@ router.get('/', async function(req, res, next) {
   res.status(201).json(adverts);
 });
 
-router.post('/', upload.single('image'), [
+/* Create new ad. Private */
+router.post('/', jwtAuth(), upload.single('image'), [
   body('name').isString().withMessage('Name cant be empty'),
   body('price').isNumeric().withMessage('Price can only contain numbers'),
   body('status').isBoolean().withMessage('Status cant be empty'),
-], async function(req, res, next) {
+], async function (req, res, next) {
   try {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
     const advert = new Advert(req.body);
     const userId = req.userId;
     const user = await User.findById(userId);
-    
+
     if (!user) {
       res.status(403).json('You have to be logged to create an advert');
       return;
@@ -77,19 +82,19 @@ router.post('/', upload.single('image'), [
     advert.owner = user.username;
     advert.date_creation = Date.now();
     await advert.setFoto(req.file);
-    
 
     const saved = await advert.save();
-    res.status(201).json(saved);
+    res.status(201).json({ 'new ad details': saved, 'id': saved._id });
   } catch (error) { next(error) }
 });
 
+/* See ad detail. Public & private */
 router.get('/:id', async (req, res, next) => {
   try {
     const _id = req.params.id;
 
-    const advert = await Advert.findOne({_id});
-    if (!advert){
+    const advert = await Advert.findOne({ _id });
+    if (!advert) {
       const error = new Error('not found');
       error.status = 404;
       return next(error);
@@ -98,7 +103,9 @@ router.get('/:id', async (req, res, next) => {
   } catch (error) { next(error) }
 })
 
-router.put('/:id', upload.single('image'), async function(req, res, next) {
+/* Edit ad. Private */
+
+router.put('/:id', jwtAuth(), upload.single('image'), async function (req, res, next) {
   try {
     const _id = req.params.id;
     const advert = req.body;
@@ -111,16 +118,18 @@ router.put('/:id', upload.single('image'), async function(req, res, next) {
       result: savedAdvert,
       message: 'Advert updated correctly'
     });
-  } catch (error) { next(error) }  
+  } catch (error) { next(error) }
 });
 
-router.delete('/:id', async(req, res, next) => {
+/* Delete ad. Private */
+
+router.delete('/:id', jwtAuth(), async (req, res, next) => {
   try {
     const _id = req.params.id;
 
     await Advert.deleteOne({ _id });
     res.json({ message: 'The advert has been removed correctly' });
   } catch (error) { next(error) }
-})
+}) 
 
 module.exports = router;

@@ -4,15 +4,15 @@ Wallacloneback is the backend application of Wallaclone, wallaclone is an applic
 
 ## Installation
 
-Use the package manager npm to run this application
+- Run `npm install` to install all the dependencies
 
-`npm start`
+- Change .example.env file name to .env and include the required environment variables
 
-To run the application in developer mode
+- Run `npm start` to start the server in production mode or `npm run dev` to run it in development mode
 
-`npm run dev`
 
-## API
+
+## API documentation
 
 ### User Creation
 This endpoint is a CRUD of users, allows to create, remove, get one and all users and also edit.
@@ -78,3 +78,6 @@ Return all the tags allowed for the products
 
 `http://localhost:3000/api/tags`
 
+### Favorites
+
+`http://localhost:3000/api/favorites`

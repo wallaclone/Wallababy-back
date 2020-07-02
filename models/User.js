@@ -3,20 +3,29 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 const nodemailer = require('nodemailer');
+const Handlebars = require('handlebars');
+const jwt = require('jsonwebtoken');
+
+const fs = require('fs');
+const emailTemplate = Handlebars.compile(fs.readFileSync('./views/email.handlebars').toString()
+);
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = mongoose.Schema({
-    username: { type: String, unique: true, index: true },
-    email: {type: String, unique: true, index: true },
-    password: String
+    username: { type: String, unique: true, index: true, required: true },
+    email: { type: String, unique: true, index: true, required: true },
+    password: { type: String, required: true },
+    favorites: [{ type: ObjectId, ref: 'Fav ads' }]
 })
 
-userSchema.statics.hashPassword = function(plainPassword) {
+userSchema.statics.hashPassword = function (plainPassword) {
     const salt = bcrypt.genSaltSync(10);
-    
+
     return bcrypt.hashSync(plainPassword, salt);
 }
 
-userSchema.statics.recoverPassword = async function(email) {
+userSchema.statics.recoverPassword = async function (email) {
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -30,6 +39,10 @@ userSchema.statics.recoverPassword = async function(email) {
         }
     })
 
+    const token = jwt.sign({ _id: user._id}, process.env.JWT_SECRET, {
+        expiresIn: '1d'
+    });
+
     let info = await transporter.sendMail({
         from: process.env.WALLACLONE_EMAIL,
         to: email,
@@ -37,15 +50,11 @@ userSchema.statics.recoverPassword = async function(email) {
             rejectUnauthorized: false
         },
         subject: `Forgot Password`,
-        html: `
-        <h1>Hello `+ user.username + `</h1>
-        <body>
-            <p>Someone requested that the password for your Wallaclone account be reset.</p>
-            <p>Click <a href="http://localhost:3000/changePassword/?` + user._id + `">here</a> to reset your password</p>
-            <p>If you didnt request this, you can ignore this email or let us know. Your password
-            will not change until you create a new password</p>
-        </body>`
-        
+        html: emailTemplate({
+            username: user.username,
+            id: user._id,
+            token: token
+        }),
     });
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
     console.log("message sent: ", info);

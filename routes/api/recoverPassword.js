@@ -4,6 +4,8 @@ const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
 const { body, validationResult } = require('express-validator');
+const jwtAuth = require('../../lib/jwtAuth');
+
 
 /* Send email to the specified email*/
 router.post('/', [
@@ -27,7 +29,8 @@ router.post('/', [
  Endpoint to change user password before recoverpassword request,
  Endpoint is: http://localhost:3000/recoverpassword/forgotpassword/:userId
 */
-router.post('/forgotpassword/:id', async function(req, res, next) {
+router.post('/forgotpassword/:id', jwtAuth(), async function(req, res, next) {
+
   try {
     const newPassword = req.body.password;
     if (!newPassword) {
