@@ -14,7 +14,7 @@ require('./lib/connectMongoose');
 const app = express();
 
 /* Allow all cors request */
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:3001'}));
 
 /* Fix email issue with TLS Request, FIXED IN EMAIL REQUEST */
 //process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
