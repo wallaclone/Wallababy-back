@@ -31,7 +31,7 @@ const currentDateFormatted = () => {
     const hours = dateObj.getHours();
     const minutes = dateObj.getMinutes();
 
-    const newdate = year + '-' + month + '-' + day + '-' + hours + ':' + minutes + '_';
+    const newdate = year + '-' + month + '-' + day + '-' + hours + '_' + minutes + '_';
     return newdate;
 }
 
