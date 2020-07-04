@@ -57,7 +57,7 @@ router.delete('/:id', async (req, res, next) => {
 router.get('/', async function(req, res, next) {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId).populate('Fav Ads');
+    const user = await User.findById(userId).populate('favorites');
     
     res.status(201).json(user.favorites);
 

@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     username: { type: String, unique: true, index: true, required: true },
     email: { type: String, unique: true, index: true, required: true },
     password: { type: String, required: true },
-    favorites: [{ type: ObjectId, ref: 'Fav ads' }]
+    favorites: [{ type: ObjectId, ref: 'Advertisement' }]
 })
 
 userSchema.statics.hashPassword = function (plainPassword) {
