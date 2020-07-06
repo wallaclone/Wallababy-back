@@ -3,6 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
+const jwtAuth = require('../../lib/jwtAuth');
+const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 
 
@@ -12,17 +14,23 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET a specific user by Id*/
-router.get('/:id', async function(req, res, next) {
+router.get('/:filter', async function(req, res, next) {
   try {
-    const _id = req.params.id;
+    const _id = req.params.filter;
+    const username = req.params.filter;
+    const userByName = await User.findOne({username});
 
-    const user = await User.findById({_id});
-    if (!user){
+    if (userByName) {
+      return res.json({result: userByName})
+    }
+    const userById = await User.findById({_id});
+    if (!userById && !userByName){
       const error = new Error('not found');
       error.status = 404;
       return next(error);
     }
-    res.json({ result: user })
+    
+    res.json({ result: userById })
   } catch (error) { next(error) }
 })
 
@@ -70,18 +78,40 @@ router.post('/', [
   }
 });
 
-/* Edit the user specifying the id */
-router.put('/:id', async function(req, res, next) {
+/* Edit the user specifying the id. Private*/
+router.put('/:id', jwtAuth(), async function(req, res, next) {
   try {
     const userId = req.params.id;
     const userData = req.body;
+    const token = req.query.token || req.header('Authorization');
+    const userNameInDb = await User.findOne({username: userData.username});
+    const userEmailInDb = await User.findOne({email: userData.email});
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedUser = await User.findOne({_id: decoded._id});
+
+    if (userNameInDb) {
+      if (JSON.stringify(decodedUser._id) != JSON.stringify(userNameInDb._id)) {
+        return res.status(400).json('The username already exists');
+      }
+    }
+    console.log("hola");
+    if (userEmailInDb) {
+      if (decodedUser.email != userEmailInDb.email){
+        return res.status(400).json('The email already exists');
+      }
+    }
 
     await User.findByIdAndUpdate(userId, {
       username: userData.username,
       email: userData.email,
       password: User.hashPassword(userData.password)
     });
-    res.status(201).json('The user has been updated correctly');
+
+    /*const newToken = jwt.sign({ _id: userData._id}, process.env.JWT_SECRET, {
+      expiresIn: '2d'
+    });*/
+
+    res.status(201).json({message: 'The user has been updated correctly'});
   } catch (error) { next(error) }
 })
 

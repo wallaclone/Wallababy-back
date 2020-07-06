@@ -8,7 +8,7 @@ const User = require('../../models/User');
 
 router.get('/', async function (req, res, next) {
   try {
-    const token = req.query.token;
+    const token = req.query.token || req.get('Authorization');
     if (!token) {
       const error = new Error('No user logged');
       next(error);

@@ -109,13 +109,14 @@ router.put('/:id', jwtAuth(), upload.single('image'), async function (req, res, 
   try {
     const _id = req.params.id;
     const advert = req.body;
-    advert.image = req.file.filename;
-    const savedAdvert = await Advert.findOneAndUpdate({ _id }, advert, {
+    if (typeof advert.image !== 'string'){
+      advert.image = req.file.filename;
+    }
+    await Advert.findOneAndUpdate({ _id }, advert, {
       new: true,
       useFindAndModify: false,
     });
     res.json({
-      result: savedAdvert,
       message: 'Advert updated correctly'
     });
   } catch (error) { next(error) }
