@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../../models/User');
+const Adverts = require('../../models/Advertisement');
 const jwtAuth = require('../../lib/jwtAuth');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
@@ -81,35 +82,31 @@ router.post('/', [
 /* Edit the user specifying the id. Private*/
 router.put('/:id', jwtAuth(), async function(req, res, next) {
   try {
-    const userId = req.params.id;
     const userData = req.body;
     const token = req.query.token || req.header('Authorization');
     const userNameInDb = await User.findOne({username: userData.username});
     const userEmailInDb = await User.findOne({email: userData.email});
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const decodedUser = await User.findOne({_id: decoded._id});
-
+    
     if (userNameInDb) {
       if (JSON.stringify(decodedUser._id) != JSON.stringify(userNameInDb._id)) {
         return res.status(400).json('The username already exists');
       }
     }
-    console.log("hola");
+
     if (userEmailInDb) {
       if (decodedUser.email != userEmailInDb.email){
         return res.status(400).json('The email already exists');
       }
     }
 
-    await User.findByIdAndUpdate(userId, {
+    await Adverts.find({ owner: decodedUser.username }).updateMany({owner: userData.username});
+    await User.findByIdAndUpdate(decodedUser._id, {
       username: userData.username,
       email: userData.email,
       password: User.hashPassword(userData.password)
     });
-
-    /*const newToken = jwt.sign({ _id: userData._id}, process.env.JWT_SECRET, {
-      expiresIn: '2d'
-    });*/
 
     res.status(201).json({message: 'The user has been updated correctly'});
   } catch (error) { next(error) }
@@ -119,8 +116,11 @@ router.put('/:id', jwtAuth(), async function(req, res, next) {
 router.delete('/:id', async function(req, res, next) {
   try {
     const userId = req.params.id;
-
+    const user = await User.findById(userId);
+    
+    
     await User.findByIdAndDelete(userId);
+    await Adverts.find({ owner: user.username }).deleteMany();
     res.status(201).json('The user has been removed correctly');
   } catch (error) { next(error) }
 })

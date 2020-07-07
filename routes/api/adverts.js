@@ -19,9 +19,9 @@ router.get('/', async function (req, res, next) {
   const price = req.query.price;
   const owner = req.query.owner;
   const filters = {};
-
+  
   if (typeof name !== 'undefined') {
-    filters.name = new RegExp(nombre, 'i');
+    filters.name = new RegExp(name, 'i');
   }
 
   if (typeof tags !== 'undefined') {
