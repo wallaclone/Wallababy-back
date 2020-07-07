@@ -19,9 +19,9 @@ router.get('/', async function (req, res, next) {
   const price = req.query.price;
   const owner = req.query.owner;
   const filters = {};
-
+  
   if (typeof name !== 'undefined') {
-    filters.name = new RegExp(nombre, 'i');
+    filters.name = new RegExp(name, 'i');
   }
 
   if (typeof tags !== 'undefined') {
@@ -109,13 +109,14 @@ router.put('/:id', jwtAuth(), upload.single('image'), async function (req, res, 
   try {
     const _id = req.params.id;
     const advert = req.body;
-    advert.image = req.file.filename;
-    const savedAdvert = await Advert.findOneAndUpdate({ _id }, advert, {
+    if (typeof advert.image !== 'string'){
+      advert.image = req.file.filename;
+    }
+    await Advert.findOneAndUpdate({ _id }, advert, {
       new: true,
       useFindAndModify: false,
     });
     res.json({
-      result: savedAdvert,
       message: 'Advert updated correctly'
     });
   } catch (error) { next(error) }
