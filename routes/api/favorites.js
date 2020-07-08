@@ -30,7 +30,7 @@ router.post('/', async (req, res, next) => {
 /* Remove ad from favorites list */
 
 router.delete('/:id', async (req, res, next) => {
-  const advert_id = req.params.id;
+  const advert_id = req.params.id;;
 
   try {
     const userId = req.userId;
