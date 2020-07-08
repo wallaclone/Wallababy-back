@@ -15,7 +15,7 @@ router.get('/', async function (req, res, next) {
   const sort = req.query.sort || 'date_creation';
   const name = req.query.name;
   const tags = req.query.tags;
-  const toSell = req.query.venta;
+  const status = req.query.status;
   const price = req.query.price;
   const owner = req.query.owner;
   const filters = {};
@@ -28,8 +28,8 @@ router.get('/', async function (req, res, next) {
     filters.tags = tags;
   }
 
-  if (typeof toSell !== 'undefined') {
-    filters.toSell = toSell;
+  if (typeof status !== 'undefined') {
+    filters.status = status;
   }
 
   if (typeof price !== 'undefined' && price !== '-') {
@@ -46,10 +46,6 @@ router.get('/', async function (req, res, next) {
     } else {
       filters.price = price
     }
-  }
-
-  if (typeof name !== 'undefined') {
-    filters.name = name;
   }
 
   if (typeof owner !== 'undefined') {
