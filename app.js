@@ -32,11 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/login', require('./routes/api/login'));
-app.use('/api/currentuser', require('./routes/api/currentuser'));
+app.use('/api/currentuser', require('./routes/api/currentUser'));
 app.use('/api/recoverpassword', require('./routes/api/recoverPassword'));
 app.use('/api/adverts', require('./routes/api/adverts'));
 app.use('/api/favorites', jwtAuth(), require('./routes/api/favorites'))
-app.use('/api/tags', jwtAuth(), require('./routes/api/tags'));
+app.use('/api/tags', require('./routes/api/tags'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
