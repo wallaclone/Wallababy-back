@@ -11,6 +11,7 @@ const { body, validationResult } = require('express-validator');
 /* Show ad list and filters. Public & private*/
 
 router.get('/', async function (req, res, next) {
+  const skip = parseInt(req.query.skip) || 0;
   const limit = parseInt(req.query.limit) || 1000;
   const sort = req.query.sort || 'date_creation';
   const name = req.query.name;
@@ -52,7 +53,8 @@ router.get('/', async function (req, res, next) {
     filters.owner = owner
   }
 
-  const adverts = await Advert.list(filters, limit, sort);
+  const adverts = await Advert.list(filters, skip, limit, sort);
+ 
   res.status(201).json(adverts);
 });
 

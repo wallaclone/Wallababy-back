@@ -13,13 +13,15 @@ const advertSchema = mongoose.Schema({
     date_creation: Date,
 });
 
-advertSchema.statics.list = async function(filters, limit, sortField) {
+advertSchema.statics.list = async function(filters, skip, limit, sortField) {
     const query = Advertisement.find(filters);
     query.sort(sortField);
+    query.skip(skip);
     query.limit(limit);
-
+    
     const result = {};
     result.rows = await query.exec();
+    result.count = await query.count();
     return result;
 }
 
