@@ -14,17 +14,17 @@ const advertSchema = mongoose.Schema({
 });
 
 advertSchema.statics.list = async function(filters, skip, limit, sortField) {
+    const result = {};
     const query = Advertisement.find(filters);
     query.sort(sortField);
     query.skip(skip);
     query.limit(limit);
-    
-    const result = {};
     result.rows = await query.exec();
+    query.skip(0);
+    query.limit();
     result.count = await query.count();
     return result;
 }
-
 const currentDateFormatted = () => {
     const dateObj = new Date();
     const month = dateObj.getMonth() + 1;
