@@ -11,6 +11,8 @@ const advertSchema = mongoose.Schema({
     owner: String,
     tags: [String],
     date_creation: Date,
+    reserved: { type: Boolean,  default: false},
+    sold: { type: Boolean,  default: false }
 });
 
 advertSchema.statics.list = async function(filters, skip, limit, sortField) {
