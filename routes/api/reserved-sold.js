@@ -32,6 +32,35 @@ router.post('/sold/:id', async (req, res, next) => {
   }
 });
 
+/* Mark ad as not sold */ 
+
+router.post('/notsold/:id', async (req, res, next) => {
+  const _id = req.params.id;
+
+  try {
+    const userId = req.userId;
+    const user = await User.findById(userId);
+    const username = user.username;
+    
+    const ad = await Advert.findById({ _id })
+    const owner =  ad.owner;
+
+ 
+    if (username === owner) {
+      const adUpdated = await Advert.findByIdAndUpdate(
+        ad._id,
+        { $set: { sold: false } },
+        { new: true }
+      );
+      return res.json({ message: 'Ad marked as not sold', adUpdated });
+    }
+
+    return res.status(400).json({ message: 'User does not own this ad' })
+  } catch (error) {
+    console.log('Error chanching ad status', error);
+    return res.status(500).json({ message: 'Error changing ad status' });
+  }
+});
 
 /* Mark ad as reserved */
 
