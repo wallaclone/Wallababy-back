@@ -37,7 +37,7 @@ router.get('/:filter', async function(req, res, next) {
 
 /* User Creation */
 router.post('/', [
-  body('username').isLength({ min: 5 }).withMessage('The username must have more than 5 characters'),
+  body('username').isLength({ min: 1 }).withMessage('The username must have more than 5 characters'),
   body('email').isEmail(),
   body('password').isString().withMessage('Cant be empty')
 ], async function(req, res, next) {
