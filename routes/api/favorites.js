@@ -15,7 +15,7 @@ router.post('/', async (req, res, next) => {
       const userUpdated = await User.findByIdAndUpdate(
         user._id,
         { $push: { favorites: advert_id } },
-        { new: true }
+        { new: true },
       );
       return res.json({ message: 'Ad added to fav list', userUpdated });
     }
@@ -30,18 +30,17 @@ router.post('/', async (req, res, next) => {
 /* Remove ad from favorites list */
 
 router.delete('/:id', async (req, res, next) => {
-  const advert_id = req.params.id;;
+  const advert_id = req.params.id;
 
   try {
     const userId = req.userId;
     const user = await User.findById(userId);
     const isFavved = user.favorites.includes(advert_id);
-    console.log(isFavved)
+    console.log(isFavved);
     if (isFavved) {
-        await User.findByIdAndUpdate(user._id,
+      await User.findByIdAndUpdate(user._id,
         { $pull: { favorites: advert_id } },
-        { deleted: true}
-      );
+        { deleted: true });
       return res.json({ message: 'Ad removed from favorite list' });
     }
 
@@ -52,19 +51,17 @@ router.delete('/:id', async (req, res, next) => {
   }
 });
 
-
 /* Show user's favorites list */
-router.get('/', async function(req, res, next) {
+router.get('/', async (req, res, next) => {
   try {
     const userId = req.userId;
     const user = await User.findById(userId).populate('favorites');
-    
-    res.status(201).json(user.favorites);
 
+    res.status(201).json(user.favorites);
   } catch (error) {
     console.log('Error showing fav list', error);
     return res.status(500).json({ message: 'Error showing fav list' });
-   }
+  }
 });
 
 module.exports = router;

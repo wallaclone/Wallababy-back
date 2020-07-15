@@ -1,12 +1,12 @@
 const express = require('express');
+
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectID;
 
 const User = require('../../models/User');
 
-
-router.get('/', async function (req, res, next) {
+router.get('/', async (req, res, next) => {
   try {
     const token = req.query.token || req.get('Authorization');
     if (!token) {
@@ -15,14 +15,13 @@ router.get('/', async function (req, res, next) {
       return;
     }
     decoded = jwt.verify(token, process.env.JWT_SECRET);
-    let userId = decoded._id;
-    let user = await User.findOne({ _id: ObjectId(userId) })
+    const userId = decoded._id;
+    const user = await User.findOne({ _id: ObjectId(userId) });
     res.status(201).json({
-      'user': user.username
+      user: user.username,
     });
   } catch (error) {
     next(error);
   }
-}
-);
+});
 module.exports = router;
