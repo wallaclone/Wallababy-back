@@ -1,5 +1,3 @@
-'use strict';
-
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -14,10 +12,10 @@ require('./lib/connectMongoose');
 const app = express();
 
 /* Allow all cors request */
-app.use(cors({credentials: true, origin: 'http://localhost:3001'}));
+app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
 
 /* Fix email issue with TLS Request, FIXED IN EMAIL REQUEST */
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,15 +34,15 @@ app.use('/api/currentuser', require('./routes/api/currentUser'));
 app.use('/api/recoverpassword', require('./routes/api/recoverPassword'));
 app.use('/api/adverts', require('./routes/api/adverts'));
 app.use('/api/status', jwtAuth(), require('./routes/api/reserved-sold'));
-app.use('/api/favorites', jwtAuth(), require('./routes/api/favorites'))
+app.use('/api/favorites', jwtAuth(), require('./routes/api/favorites'));
 app.use('/api/tags', require('./routes/api/tags'));
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

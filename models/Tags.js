@@ -1,16 +1,14 @@
-'use strict';
-
 const mongoose = require('mongoose');
 
 const tagSchema = mongoose.Schema({
-    name: String,
+  name: String,
 });
 
-tagSchema.statics.list = async function() {
-    const tags = await Tag.find();
+tagSchema.statics.list = async function () {
+  const tags = await Tag.find();
 
-    return tags;
-}
+  return tags;
+};
 
 const Tag = mongoose.model('Tag', tagSchema);
 

@@ -1,29 +1,27 @@
-'use strict';
-
 const express = require('express');
+
 const router = express.Router();
-const User = require('../../models/User');
 const { body, validationResult } = require('express-validator');
+const User = require('../../models/User');
 const jwtAuth = require('../../lib/jwtAuth');
 
-
-/* Send email to the specified email*/
+/* Send email to the specified email */
 router.post('/', [
-  body('email').isEmail()
-], async function(req, res, next) {
+  body('email').isEmail(),
+], async (req, res, next) => {
   try {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
     const email = req.body.email;
     const language = req.body.language;
 
-    if (language == 'es-ES') 
-    {await User.recoverPasswordEs(email);
-    res.status(201).json('Email sent');}
-    else {
-      await User.recoverPassword(email)
+    if (language === 'es-ES') {
+      await User.recoverPasswordEs(email);
+      res.status(201).json('Email sent');
+    } else {
+      await User.recoverPassword(email);
       res.status(201).json('Email sent');
     }
   } catch (error) {
@@ -35,8 +33,7 @@ router.post('/', [
  Endpoint to change user password after recoverpassword request,
  Endpoint is: http://localhost:3000/recoverpassword/forgotpassword/:userId
 */
-router.post('/forgotpassword/:id', jwtAuth(), async function(req, res, next) {
-
+router.post('/forgotpassword/:id', jwtAuth(), async (req, res, next) => {
   try {
     const newPassword = req.body.password;
     if (!newPassword) {
@@ -49,7 +46,7 @@ router.post('/forgotpassword/:id', jwtAuth(), async function(req, res, next) {
       res.status(401).json('User not found');
       return;
     }
-    await user.update({ password: User.hashPassword(newPassword)});
+    await user.update({ password: User.hashPassword(newPassword) });
     res.status(201).json('Password updated correctly');
   } catch (error) {
     next(error);
