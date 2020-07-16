@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
     type: String, unique: true, index: true, required: true,
   },
   email: {
-    type: String, unique: true, index: true, required: true,
+    type: String, unique: true, index: true, required: true, ref: 'Advertisement'
   },
   password: { type: String, required: true },
   favorites: [{ type: ObjectId, ref: 'Advertisement' }],
