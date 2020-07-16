@@ -6,7 +6,8 @@
         "status": "true",
         "price": 250,
         "owner": "usertest@hotmail.com",
-        "tag": "comfort"
+        "tag": "comfort",
+        "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
         "name": "Disfraz Papa Noel",
@@ -15,7 +16,8 @@
         "status": "true",
         "price": 30,
         "owner": "usertest@hotmail.com",
-        "tag": "costume"
+        "tag": "costume",
+        "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
         "name": "Cuentos",
@@ -24,7 +26,8 @@
         "status": "true",
         "price": 20,
         "owner": "usertest@hotmail.com",
-        "tag": ["educational", "hobby"]
+        "tag": ["educational", "hobby"],
+        "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
         "name": "Carrito para bebé",
@@ -33,6 +36,7 @@
         "status": "false",
         "price": 200,
         "owner": "usertest@hotmail.com",
-        "tag": "comfort"
+        "tag": "comfort",
+        "date_creation": "2020-07-13T12:13:20.808Z"
     }
 ]
