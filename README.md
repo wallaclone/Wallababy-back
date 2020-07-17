@@ -8,6 +8,8 @@ Wallacloneback is the backend application of Wallaclone, wallaclone is an applic
 
 - Change .example.env file name to .env and include the required environment variables
 
+- Run `npm run install-db` to seed database
+
 - Run `npm start` to start the server in production mode or `npm run dev` to run it in development mode
 
 
@@ -78,6 +80,6 @@ Return all the tags allowed for the products
 
 `http://localhost:3000/api/tags`
 
-### Favorites
+### Favorites
 
 `http://localhost:3000/api/favorites`
