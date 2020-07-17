@@ -14,7 +14,7 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = mongoose.Schema({
   username: {
-    type: String, unique: true, index: true, required: true,
+    type: String, unique: true, index: true, required: true, validate: validator,
   },
   email: {
     type: String, unique: true, index: true, required: true, ref: 'Advertisement'
@@ -22,6 +22,12 @@ const userSchema = mongoose.Schema({
   password: { type: String, required: true },
   favorites: [{ type: ObjectId, ref: 'Advertisement' }],
 });
+
+function validator (username) {
+  if (username === 'guest') {
+    return false} 
+    return;
+}
 
 userSchema.statics.hashPassword = function (plainPassword) {
   const salt = bcrypt.genSaltSync(10);
