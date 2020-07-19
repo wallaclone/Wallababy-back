@@ -4,6 +4,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectID;
 
+
 const User = require('../../models/User');
 
 router.get('/', async (req, res, next) => {
@@ -25,17 +26,5 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/email', async (req, res, next) => {
-  try {
-    const owner = req.query.owner;
-    const user = await User.findOne({username: owner})
-    console.log(user)
-    res.status(201).json({
-      email: user.email,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 
 module.exports = router;
