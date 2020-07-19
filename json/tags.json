@@ -1,23 +1,15 @@
 [
-    {
-        "name": "comfort"
-    },
-    {
-        "name": "educational"
-    },
-    {
-        "name": "accessories"
-    },
-    {
-        "name": "promotions"
-    },
-    {
-        "name": "food"
-    },
-    {
-        "name": "furniture"
-    },
-    {
-        "name": "security"
-    }
+    { "name": "Accessories" },
+    { "name": "Comfort" },
+    { "name": "Educational" },
+    { "name": "Entertainment" },
+    { "name": "Food" },
+    { "name": "Furniture" },
+    { "name": "Promotions" },
+    { "name": "Security" },
+    { "name": "Toys" },
+    { "name": "Costume" },
+    { "name": "Hobby" },
+    { "name": "Clothes" },
+    { "name": "Footwear" }
 ]
