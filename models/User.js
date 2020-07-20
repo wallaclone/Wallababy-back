@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema({
   },
   password: { type: String, required: true },
   favorites: [{ type: ObjectId, ref: 'Advertisement' }],
+  subscription: { type: mongoose.Schema.Types.Mixed, index: true },
 });
 
 function validator (username) {

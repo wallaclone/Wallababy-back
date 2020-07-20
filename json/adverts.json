@@ -6,27 +6,27 @@
         "status": "true",
         "price": 250,
         "owner": "usertest@hotmail.com",
-        "tag": "comfort",
+        "tags": "comfort",
         "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
         "name": "Disfraz Papa Noel",
         "description": "Un ingenioso disfraz para pasar unas buenas navidades en familia",
-        "image": "disfraz-bebe.jpg",
+        "image": "disfraz-bebe.jpeg",
         "status": "true",
         "price": 30,
         "owner": "usertest@hotmail.com",
-        "tag": "costume",
+        "tags": "costume",
         "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
         "name": "Cuentos",
         "description": "Cuentos infantiles para contarle a tu bebe antes de dormir",
-        "image": "cuantos-infantiles.jpeg",
+        "image": "cuentos-infantiles.jpeg",
         "status": "true",
         "price": 20,
         "owner": "usertest@hotmail.com",
-        "tag": ["educational", "hobby"],
+        "tags": ["educational", "hobby"],
         "date_creation": "2020-07-13T12:13:20.808Z"
     },
     {
@@ -36,7 +36,7 @@
         "status": "false",
         "price": 200,
         "owner": "usertest@hotmail.com",
-        "tag": "comfort",
+        "tags": "comfort",
         "date_creation": "2020-07-13T12:13:20.808Z"
     }
 ]

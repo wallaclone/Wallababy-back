@@ -4,6 +4,7 @@ const path = require('path');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const bodyParser = require('body-parser');
 const jwtAuth = require('./lib/jwtAuth');
 
 require('dotenv').config();
@@ -13,6 +14,9 @@ const app = express();
 
 /* Allow all cors request */
 app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
+
+/* Notifications */
+app.use(bodyParser.json());
 
 /* Fix email issue with TLS Request, FIXED IN EMAIL REQUEST */
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -36,6 +40,8 @@ app.use('/api/adverts', require('./routes/api/adverts'));
 app.use('/api/status', jwtAuth(), require('./routes/api/reservedSold'));
 app.use('/api/favorites', jwtAuth(), require('./routes/api/favorites'));
 app.use('/api/tags', require('./routes/api/tags'));
+app.use('/notifications/subscribe', require('./routes/notifications/notifications'));
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));

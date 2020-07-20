@@ -25,7 +25,6 @@ router.post('/sold/:id', async (req, res, next) => {
 
     return res.status(400).json({ message: 'User does not own this ad' });
   } catch (error) {
-    console.log('Error chanching ad status', error);
     return res.status(500).json({ message: 'Error changing ad status' });
   }
 });
@@ -77,7 +76,7 @@ router.post('/reserved/:id', async (req, res, next) => {
         { $set: { reserved: true } },
         { new: true },
       );
-      return res.json({ message: 'Ad marked as sold', adUpdated });
+      return res.json({ message: 'Ad marked as reserved', adUpdated });
     }
 
     return res.status(400).json({ message: 'User does not own this ad' });

@@ -21,7 +21,7 @@ This endpoint is a CRUD of users, allows to create, remove, get one and all user
 
 `http://localhost:3000/api/users`
 
-To edit, remove or get one user specify the user id:
+To edit, remove or get one user, specify the user id:
 
 `http://localhost:3000/api/users/9820jidwa92`
 
@@ -56,6 +56,14 @@ Endpoint to call to update user password, before recover
 
 1. password 
 
+### User Logged
+Endpoint that return the username of the user logged
+
+`http://localhost:3000/api/currentuser`
+
+Endpoint that return the email of the user logged
+
+`http://localhost:3000/api/currentuser/email?owner=username`
 
 ### Advertisements
 This endpoint is a CRUD of adverts, allows to create, remove, get one and all adverts and also edit.
@@ -81,5 +89,32 @@ Return all the tags allowed for the products
 `http://localhost:3000/api/tags`
 
 ### Favorites
+This endpoint allows the user to add adverts to his favourite list and to see them.
 
 `http://localhost:3000/api/favorites`
+
+If you specify the id of the advert you can remove that advert from your favourite list
+
+`http://localhost:3000/api/favorites/6a9d00awd8a62`
+
+### Advert Status
+Endpoint to set an advert as sold
+
+`http://localhost:3000/api/status/sold/5f157da203578d17ad3679d7`
+
+Endpoint to set an advert as not sold
+
+`http://localhost:3000/api/status/notsold/5f157da203578d17ad3679d7`
+
+Endpoint to set an advert as reserved
+
+`http://localhost:3000/api/status/reserved/5f157da203578d17ad3679d7`
+
+Endpoint to set an advert as not reserved
+
+`http://localhost:3000/api/status/unreserved/5f157da203578d17ad3679d7`
+
+### Notifications
+Endpoint to create a user subscription for the notifications
+
+`http://localhost:3000/notifications/subscribe`

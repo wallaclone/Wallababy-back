@@ -29,7 +29,7 @@ router.get('/email', async (req, res, next) => {
   try {
     const owner = req.query.owner;
     const user = await User.findOne({username: owner})
-    console.log(user)
+
     res.status(201).json({
       email: user.email,
     });
