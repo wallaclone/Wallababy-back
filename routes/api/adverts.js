@@ -17,10 +17,20 @@ router.get('/', async (req, res, next) => {
   const status = req.query.status;
   const price = req.query.price;
   const owner = req.query.owner;
+  const sold = req.query.sold;
+  const reserved = req.query.reserved;
   const filters = {};
 
   if (typeof name !== 'undefined') {
     filters.name = new RegExp(name, 'i');
+  }
+
+  if (typeof sold != 'undefined') {
+    filters.sold = sold;
+  }
+
+  if (typeof reserved != 'undefined') {
+    filters.reserved = reserved;
   }
 
   if (typeof tags !== 'undefined') {
