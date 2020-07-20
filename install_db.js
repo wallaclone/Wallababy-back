@@ -25,16 +25,21 @@ async function initAdverts(cb) {
 async function initUsers() {
   await Users.deleteMany();
   await Users.insertMany([
-    {
-      username: 'firstuser',
-      email: 'firstuser@hotmail.com',
-      password: await Users.hashPassword('theFirst123'),
-    },
-    {
-      username: 'usertest',
-      email: 'usertest@hotmail.com',
-      password: await Users.hashPassword('userTest123'),
-    },
+      {
+          username: "SergioPC",
+          email: 'sergio.wallababy@gmail.com',
+          password: await Users.hashPassword('1234')
+      },
+      {
+          username: 'GonzaloLR',
+          email: 'gonzalo.wallababy@gmail.com',
+          password: await Users.hashPassword('1234')
+      },
+      {
+          username: 'GemaSB',
+          email: 'gema.wallababy@gmail.com',
+          password: await Users.hashPassword('1234')
+      }
   ]);
 }
 

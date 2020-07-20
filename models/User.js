@@ -3,14 +3,14 @@ const bcrypt = require('bcrypt-nodejs');
 const nodemailer = require('nodemailer');
 const Handlebars = require('handlebars');
 const jwt = require('jsonwebtoken');
-
 const fs = require('fs');
-
-const emailTemplate = Handlebars.compile(fs.readFileSync('./views/email.handlebars').toString());
-
-const emailTemplateES = Handlebars.compile(fs.readFileSync('./views/emailES.handlebars').toString());
-
 const { ObjectId } = mongoose.Schema.Types;
+
+const Advertisement = require('./Advertisement');
+const emailTemplate = Handlebars.compile(fs.readFileSync('./views/email.handlebars').toString());
+const emailTemplateES = Handlebars.compile(fs.readFileSync('./views/emailES.handlebars').toString());
+const emailTemplateWTB = Handlebars.compile(fs.readFileSync('./views/emailWTB.handlebars').toString());
+const emailTemplateWTBES = Handlebars.compile(fs.readFileSync('./views/emailWTBES.handlebars').toString());
 
 const userSchema = mongoose.Schema({
   username: {
@@ -103,6 +103,81 @@ userSchema.statics.recoverPasswordEs = async function (email) {
   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
   console.log('message sent: ', info);
 };
+
+userSchema.statics.contactUser = async function (email, sender, adId) {
+  const user = await User.findOne({email})
+  const user2 = await User.findOne({username: sender})
+  const destination = user.email;
+  const ad = await Advertisement.findById(adId)
+  if (!user) {
+    throw new Error('The email doesn`t exists');
+  }
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.WALLACLONE_EMAIL,
+      pass: process.env.WALLACLONE_PASS,
+    },
+  });
+
+
+  const info = await transporter.sendMail({
+    from: process.env.WALLACLONE_EMAIL,
+    to: destination,
+    tls: {
+      rejectUnauthorized: false,
+    },
+    subject: `I'm interested in your ad ${ad.name}!`,
+    html: emailTemplateWTB({
+      username: user.username,
+      sender: user2.username,
+      senderMail: user2.email,
+      adName: ad.name,
+    }),
+  });
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  console.log('message sent: ', info);
+};
+
+userSchema.statics.contactUserES = async function (email, sender, adId) {
+  const user = await User.findOne({email})
+  const user2 = await User.findOne({username: sender})
+  const destination = user.email;
+  const ad = await Advertisement.findById(adId)
+  if (!user) {
+    throw new Error('The email doesn`t exists');
+  }
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.WALLACLONE_EMAIL,
+      pass: process.env.WALLACLONE_PASS,
+    },
+  });
+
+
+  const info = await transporter.sendMail({
+    from: process.env.WALLACLONE_EMAIL,
+    to: destination,
+    tls: {
+      rejectUnauthorized: false,
+    },
+    subject: `¡Me interesa tu anuncio ${ad.name}!`,
+    html: emailTemplateWTBES({
+      username: user.username,
+      sender: user2.username,
+      senderMail: user2.email,
+      adName: ad.name,
+    }),
+  });
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+  console.log('message sent: ', info);
+};
+
+
+
+
+
 
 const User = mongoose.model('User', userSchema);
 

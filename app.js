@@ -35,6 +35,7 @@ app.use('/', require('./routes/index'));
 app.use('/api/users', require('./routes/api/users'));
 app.use('/api/login', require('./routes/api/login'));
 app.use('/api/currentuser', require('./routes/api/currentUser'));
+app.use('/api/email', jwtAuth(), require('./routes/api/emails'));
 app.use('/api/recoverpassword', require('./routes/api/recoverPassword'));
 app.use('/api/adverts', require('./routes/api/adverts'));
 app.use('/api/status', jwtAuth(), require('./routes/api/reservedSold'));
