@@ -3,7 +3,7 @@ const { body, validationResult } = require('express-validator');
 const Advert = require('../../models/Advertisement');
 const User = require('../../models/User');
 const jwtAuth = require('../../lib/jwtAuth');
-const sendNotification = require('../../lib/sendNotifications').default;
+const sendNotification = require('../../lib/sendNotifications');
 const upload = require('../../lib/multerConfig');
 
 /* Show ad list and filters. Public & private */
@@ -120,7 +120,7 @@ router.put('/:id', jwtAuth(), upload.single('image'), async (req, res, next) => 
     const _id = req.params.id;
     const advert = req.body;
     const advertInDb = await Advert.findOne({_id});
-    const user = await User.findOne({username: advert.owner})
+    //const user = await User.findOne({username: advert.owner})
     const userFav = await User.find({favorites: _id});
     if (typeof advert.image !== 'string') {
       advert.image = req.file.filename;
@@ -130,14 +130,11 @@ router.put('/:id', jwtAuth(), upload.single('image'), async (req, res, next) => 
       const newTags = advert.tags.replace(/\s/g, "");
       advert.tags = newTags.split(',');
     }
-    //if (advertInDb.price != advert.price) {
-      /*userFav.forEach(user => {
-        console.log("userFav", userFav);
-        console.log("user", user);
-        sendNotification(user.subscription);
-      });*/
-      //sendNotification(user.subscription);
-    //}
+    if (advertInDb.price != advert.price) {
+      userFav.forEach(user => {
+        sendNotification(user);
+      });
+    }
     await Advert.findOneAndUpdate({ _id }, advert, {
       new: true,
       useFindAndModify: false,

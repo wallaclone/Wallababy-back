@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Advert = require('../../models/Advertisement');
 const User = require('../../models/User');
+const sendNotification = require('../../lib/sendNotifications');
 
 /* Mark ad as sold */
 
@@ -13,6 +14,7 @@ router.post('/sold/:id', async (req, res, next) => {
     const username = user.username;
     const ad = await Advert.findById({ _id });
     const owner =  ad.owner;
+    const userFav = await User.find({favorites: _id});
 
     if (username === owner) {
       const adUpdated = await Advert.findByIdAndUpdate(
@@ -20,11 +22,15 @@ router.post('/sold/:id', async (req, res, next) => {
         { $set: { sold: true } },
         { new: true },
       );
+      userFav.forEach(user => {
+        sendNotification(user);
+      });
       return res.json({ message: 'Ad marked as sold', adUpdated });
     }
 
     return res.status(400).json({ message: 'User does not own this ad' });
   } catch (error) {
+    console.log("erro", error);
     return res.status(500).json({ message: 'Error changing ad status' });
   }
 });
@@ -38,7 +44,6 @@ router.post('/notsold/:id', async (req, res, next) => {
     const userId = req.userId;
     const user = await User.findById(userId);
     const { username } = user;
-
     const ad = await Advert.findById({ _id })
     const owner =  ad.owner;
 
@@ -48,6 +53,7 @@ router.post('/notsold/:id', async (req, res, next) => {
         { $set: { sold: false } },
         { new: true },
       );
+      
       return res.json({ message: 'Ad marked as not sold', adUpdated });
     }
 
@@ -69,6 +75,7 @@ router.post('/reserved/:id', async (req, res, next) => {
     const username = user.username;
     const ad = await Advert.findById({ _id })
     const owner =  ad.owner;
+    const userFav = await User.find({favorites: _id});
 
     if (username === owner) {
       const adUpdated = await Advert.findByIdAndUpdate(
@@ -76,6 +83,9 @@ router.post('/reserved/:id', async (req, res, next) => {
         { $set: { reserved: true } },
         { new: true },
       );
+      userFav.forEach(user => {
+        sendNotification(user);
+      });
       return res.json({ message: 'Ad marked as reserved', adUpdated });
     }
 
