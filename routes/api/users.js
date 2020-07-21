@@ -120,7 +120,7 @@ router.put('/:id', jwtAuth(), async (req, res, next) => {
 });
 
 /* Remove user from database specifying id */
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', jwtAuth(), async (req, res, next) => {
   try {
     const userId = req.params.id;
     const user = await User.findById(userId);
