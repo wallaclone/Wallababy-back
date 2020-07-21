@@ -67,11 +67,14 @@ router.post('/', [
       email,
       password: await User.hashPassword(password),
     };
-
+    
     const newUser = new User(userData);
     const savedUser = await newUser.save();
 
-    res.status(201).json(({ result: savedUser }));
+    const token = jwt.sign({ _id: savedUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '2d',
+    });
+    res.status(201).json(({ result: savedUser, token }));
   } catch (error) {
     next(error);
   }
