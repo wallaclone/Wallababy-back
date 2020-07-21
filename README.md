@@ -1,6 +1,6 @@
-# Wallacloneback
+# WallaBaby (backend)
 
-Wallacloneback is the backend application of Wallaclone, wallaclone is an applications that allows the users to buy and sell different products andmore different functionalities like a chat, profile...
+WallaBaby (backend) is the backend application of WallaBaby. WallaBaby is an applications that allows the users to buy and sell different products.
 
 ## Installation
 
@@ -15,6 +15,10 @@ Wallacloneback is the backend application of Wallaclone, wallaclone is an applic
 
 
 ## API documentation
+
+![api-insomnia](https://github.com/wallaclone/wallaclone-front/blob/readme/readme-imgs/apidocu.png)
+
+**Checkout the API documentation [here](http://instinctive-tub.surge.sh/)**
 
 ### User Creation
 This endpoint is a CRUD of users, allows to create, remove, get one and all users and also edit.
@@ -56,14 +60,14 @@ Endpoint to call to update user password, before recover
 
 1. password 
 
-### User Logged
-Endpoint that return the username of the user logged
+### Logged user
+Endpoint that returns the username of the logged user
 
 `http://localhost:3000/api/currentuser`
 
-Endpoint that return the email of the user logged
+Endpoint that returns the email of owner of an ad
 
-`http://localhost:3000/api/currentuser/email?owner=username`
+`http://localhost:3000/api/email?owner=username`
 
 ### Advertisements
 This endpoint is a CRUD of adverts, allows to create, remove, get one and all adverts and also edit.
@@ -118,3 +122,17 @@ Endpoint to set an advert as not reserved
 Endpoint to create a user subscription for the notifications
 
 `http://localhost:3000/notifications/subscribe`
+
+
+## Authors 
+
+This app was made as a final project during the **Keepcoding Fullstack Web Development Bootcamp** (VIII Edition) by Gonzalo Liaño, Sergio Pérez and Gema Segarra.
+
+<table>
+<tr><td align="center"><a href="https://github.com/Gon99"><img src="https://avatars0.githubusercontent.com/u/43567070?v=4" width="100px;" alt="Gonzalo avatar"/><br/><sub><b>Gonzalo</b></sub></a><br/><a href="https://github.com/Gon99"></a>
+<td align="center"><a href="https://github.com/SergyPC"><img src="https://avatars2.githubusercontent.com/u/57828810?v=4" width="100px;" alt="Sergio avatar"/><br/><sub><b>Sergio</b></sub></a><br/><a href="https://github.com/SergyPC">
+<td align="center"><a href="https://github.com/gemasegarra"><img src="https://avatars2.githubusercontent.com/u/40056297?v=4" width="100px;" alt="Gema avatar"/><br/><sub><b>Gema</b></sub></a><br/><a href="https://github.com/gemasegarra"></a>
+</a>
+</table>
+
+---
