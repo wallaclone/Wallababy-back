@@ -6,7 +6,7 @@
         "status": "true",
         "price": 250,
         "owner": "SergioPC",
-        "tags": ["Security, Comfort"],
+        "tags": ["Security", "Comfort"],
         "reserved": false,
         "sold": false,
         "date_creation": "2020-05-01T08:18:18.574Z"
