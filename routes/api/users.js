@@ -6,6 +6,7 @@ const { body, validationResult } = require('express-validator');
 const User = require('../../models/User');
 const Adverts = require('../../models/Advertisement');
 const jwtAuth = require('../../lib/jwtAuth');
+const bcrypt = require('bcrypt-nodejs');
 
 /* GET users listing. */
 router.get('/', (req, res, next) => {
@@ -101,12 +102,17 @@ router.put('/:id', jwtAuth(), async (req, res, next) => {
         return res.status(400).json('The email already exists');
       }
     }
-
+    
+    
     await Adverts.find({ owner: decodedUser.username }).updateMany({ owner: userData.username });
+    if (decodedUser.password != userData.password){
+      await User.findByIdAndUpdate(decodedUser._id, {
+        password: User.hashPassword(userData.password)
+      })
+    }
     await User.findByIdAndUpdate(decodedUser._id, {
       username: userData.username,
       email: userData.email,
-      password: User.hashPassword(userData.password),
     });
 
     res.status(201).json({ message: 'The user has been updated correctly' });
