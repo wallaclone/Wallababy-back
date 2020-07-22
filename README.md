@@ -17,7 +17,7 @@ WallaBaby is an applications that allows the users to buy and sell different pro
 
 ## API documentation
 
-![api-insomnia](https://github.com/wallaclone/wallababy-front/blob/readme/readme-imgs/apidocu.png)
+![api-insomnia](https://github.com/wallaclone/wallababy-front/blob/develop/readme-imgs/apidocu.png)
 
 **Checkout the API documentation [here](http://instinctive-tub.surge.sh/)**
 
