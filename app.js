@@ -42,6 +42,7 @@ app.use('/api/status', jwtAuth(), require('./routes/api/reservedSold'));
 app.use('/api/favorites', jwtAuth(), require('./routes/api/favorites'));
 app.use('/api/tags', require('./routes/api/tags'));
 app.use('/notifications/subscribe', require('./routes/notifications/notifications'));
+app.use('/api/chats', jwtAuth(), require('./routes/api/chat/chats'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
