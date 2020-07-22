@@ -1,6 +1,7 @@
 # WallaBaby (backend)
 
-WallaBaby (backend) is the backend application of WallaBaby. WallaBaby is an applications that allows the users to buy and sell different products.
+WallaBaby (backend) is the backend application of WallaBaby built with NodeJS & Express and MongoDB & Mongoose. 
+WallaBaby is an applications that allows the users to buy and sell different products.
 
 ## Installation
 
