@@ -5,7 +5,7 @@ const webpush = require('web-push');
 
 const User = require('../../models/User');
 
-webpush.setVapidDetails('mailto:wallaclonesuport@gmail.com', process.env.PUBLIC_VAPID_KEY, process.env.PRIVATE_VAPID_KEY);
+webpush.setVapidDetails('mailto:example@yourdomain.org', process.env.PUBLIC_VAPID_KEY, process.env.PRIVATE_VAPID_KEY);
 
 router.post('/', async function (req, res, next) {
     try {
