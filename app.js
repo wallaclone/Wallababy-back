@@ -11,7 +11,6 @@ require('dotenv').config();
 require('./lib/connectMongoose');
 
 const app = express();
-
 /* Allow all cors request */
 app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
 
