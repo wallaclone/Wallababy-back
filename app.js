@@ -12,7 +12,7 @@ require('./lib/connectMongoose');
 
 const app = express();
 /* Allow all cors request */
-app.use(cors({ credentials: true, origin: process.env.CLIENT_URL }));
+app.use(cors({ credentials: true, origin: (origin, callback) => callback(null, origin) }));
 
 /* Notifications */
 app.use(bodyParser.json());
