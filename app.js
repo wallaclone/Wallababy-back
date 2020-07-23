@@ -13,7 +13,7 @@ require('./lib/connectMongoose');
 const app = express();
 
 /* Allow all cors request */
-app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
+app.use(cors({ credentials: true, origin: proccess.env.CLIENT_URL }));
 
 /* Notifications */
 app.use(bodyParser.json());
